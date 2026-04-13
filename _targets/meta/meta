@@ -1,0 +1,11 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+herring_data|stem|81af37f9b0221ba1|e18c386860607765|04d153c4a6f5d29e|2023177828||t20556.4613021152s|s1910464b|1910464|rds|local|vector|||4.344||
+herring_clean|stem|1db19a682f4d5255|4195b45a6597ea1e|7264a634635b8e5e|568268519||t20556.4613135063s|s1845813b|1845813|rds|local|vector|||0.047||
+vbgm_results|stem|fa5ff367cc438fd6|4ae2fdbea95e357c|b442e63747ba5bca|-453929466||t20556.461502819s|s5184805b|5184805|rds|local|vector|||11.5||
+fit_vbgm|function|9d3cafbc76feb9a4
+cleaning_herring|function|db4f97c66a139f77
+herring_read|function|cf57591d80eaa4b2
+plot_vbgm|function|a781bc4b2bbd9b2c
+result_vbgm|function|d16662718528ddef
+vbgm_model|stem|baae87a2c808792a|7d70e84b40a486d1|bf37024ec307f2d6|438562393||t20556.477413583s|s5170053b|5170053|rds|local|vector|||1.75||
+vbgm_plotted|stem||9f8f2deb91b17251|fdd549697add1087|-652498569||t20556.4730872973s||0|rds|local|vector|||0.047||object 'age' not found

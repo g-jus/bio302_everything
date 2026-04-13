@@ -8,8 +8,11 @@ library(targets)
 # library(tarchetypes) # Load other packages as needed.
 
 # Set target options:
+# Load all packages needed for the pipeline
 tar_option_set(
-  packages = c("tibble") # Packages that your targets need for their tasks.
+  packages = c("dplyr", "FSA", "gt", "broom", "here")
+) 
+  # Packages that your targets need for their tasks.
   # format = "qs", # Optionally set the default storage format. qs is fast.
   #
   # Pipelines that take a long time to run may benefit from
@@ -42,7 +45,7 @@ tar_option_set(
   #   )
   #
   # Set other options as needed.
-)
+
 
 # Run the R scripts in the R/ folder with your custom functions:
 tar_source()
@@ -50,13 +53,32 @@ tar_source()
 
 # Replace the target list below with your own:
 list(
+  ## Load and clean data
   tar_target(
-    name = data,
-    command = tibble(x = rnorm(100), y = rnorm(100))
-    # format = "qs" # Efficient storage for general data objects.
+    herring_data,
+    herring_read()
   ),
+  
   tar_target(
-    name = model,
-    command = coefficients(lm(y ~ x, data = data))
+    herring_clean,
+    cleaning_herring(herring_data)
+  ),
+  
+  ## Fit VBGM model.
+  tar_target(
+    vbgm_model,
+    fit_vbgm(herring_clean)
+  ),
+  
+  ## Generate results table
+  tar_target(
+    vbgm_results,
+    result_vbgm(vbgm_model)
+  ),
+  
+  ## Plot the VBGM.
+  tar_target(
+    vbgm_plotted,
+    plot_vbgm(data = herring_clean, model = vbgm_model)
   )
 )
