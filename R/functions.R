@@ -56,7 +56,8 @@ result_vbgm <- function(data) {
   return(vbgm_tbl)
 }
 
-plot_vbgm <- function(data, model, age_cap = "age", length_cap = "length") {
+plot_vbgm <- function(data, model, age_cap = "age", length_cap = "length",
+                      sample_size = 1000) {
   # Extract parameter values
   coef_vals <- coef(model)
   Linf <- round(coef_vals["Linf"], 2)
@@ -68,18 +69,22 @@ plot_vbgm <- function(data, model, age_cap = "age", length_cap = "length") {
                     ", K = ", K, 
                     ", t₀ = ", t0)
   
-  text_df <- data.frame(x = 8, y = 50, label = vb_text)
+  text_df <- data.frame(x = 6, y = 45, label = vb_text)
+  
+  # Sample data for plotting
+  data_sampled <- data |>
+    slice_sample(n = sample_size, replace = FALSE)
   
   # Create prediction grid
   age_seq <- seq(min(data[[age_cap]], na.rm = TRUE), 
                  max(data[[age_cap]], na.rm = TRUE), 
                  length.out = 100)
   pred_vbgm <- data.frame(age = age_seq)
-  names(pred_vbgm) <- age
+  names(pred_vbgm) <- age_cap
   pred_vbgm$length_pred <- predict(model, newdata = pred_vbgm)
   
   # Create plot
-  vbgm_plot <- ggplot(data, aes(x = .data[[age_cap]], y = .data[[length_cap]])) +
+  vbgm_plot <- ggplot(data_sampled, aes(x = .data[[age_cap]], y = .data[[length_cap]])) +
     geom_jitter(
       size = 2,
       color = "black",
@@ -89,7 +94,7 @@ plot_vbgm <- function(data, model, age_cap = "age", length_cap = "length") {
     ) +
     geom_line(data = pred_vbgm, 
               aes(x = .data[[age_cap]], 
-                  y = length
+                  y = length_pred
               ),
               color = "steelblue", 
               linewidth = 2
@@ -101,13 +106,13 @@ plot_vbgm <- function(data, model, age_cap = "age", length_cap = "length") {
               ),
               size = 5, 
               color = "steelblue", 
-              hjust = 0.1
+              hjust = 0.2
     ) +
     labs(x = "Age (years)", 
          y = "Total Length (cm)"
     ) +
-    scale_x_continuous(limits = c(-0.2, 12), breaks = seq(0, 12, by = 2)) +
-    scale_y_continuous(limits = c(0, 55), breaks = seq(0, 55, by = 10)) +
+    scale_x_continuous(limits = c(-0.2, 20), breaks = seq(0, 20, by = 2)) +
+    scale_y_continuous(limits = c(0, 50), breaks = seq(0, 50, by = 10)) +
     theme_bw() +
     theme(axis.title = element_text(size = 14, face = "bold"),
           axis.text = element_text(size = 14, face = "bold"),

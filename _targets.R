@@ -10,7 +10,8 @@ library(targets)
 # Set target options:
 # Load all packages needed for the pipeline
 tar_option_set(
-  packages = c("dplyr", "FSA", "gt", "broom", "here")
+  packages = c("dplyr", "FSA", "gt", "broom", "here", "ggplot2"),
+  seed = 130426
 ) 
   # Packages that your targets need for their tasks.
   # format = "qs", # Optionally set the default storage format. qs is fast.

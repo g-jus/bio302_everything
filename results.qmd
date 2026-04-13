@@ -1,0 +1,49 @@
+---
+title: "Von Bertalanffy Growth Model Analysis"
+author: "Gustav Sundvor"
+format: html
+editor: visual
+---
+
+## Introduction
+
+Analysis of herring growth using the Von Bertalanffy Growth Model (VBGM).
+
+## Methods
+
+Data were fitted using the Von Bertalanffy Growth Model equation: $$L_t = L_∞(1 - e^{-K(t-t_0)})$$
+
+## Results
+
+```{r}
+#| message: false 
+#| warning: false
+#| lable: setup
+
+## Loading targets to run pipeline.
+library(targets)
+```
+
+```{r}
+#| warning: false
+#| lable: fitting VBGM model
+
+tar_load(vbgm_model)
+summary(vbgm_model)
+```
+
+```{r}
+#| warning: false
+#| lable: results VBGM model
+
+tar_load(vbgm_results)
+vbgm_results
+```
+
+```{r}
+#| warning: false
+#| lable: plot VBGM model and sliced data
+
+tar_load(vbgm_plotted)
+vbgm_plotted
+```
