@@ -1,0 +1,72 @@
+---
+title: "bio302_everything"
+author: "Gustav Sundvor"
+format: html
+editor: visual
+---
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+```
+
+```{r}
+#| output: false
+#| label: importing packages.
+
+## Importing packages.
+library(here)
+library(dplyr)
+library(FSA)
+library(gt)
+library(broom)
+library(targets)
+```
+
+```{r}
+#| output: false
+#| label: data import and cleaning
+
+## Importing data.
+herring_data <- herring_read()
+
+## Cleaning data.
+herring_clean <- cleaning_herring(herring_data)
+```
+
+```{r}
+#| output: false
+#| label: VBGM
+
+## Finding starting values for VBGM.
+vb_start <- findGrowthStarts(length ~ age, data = herring_clean) 
+unlist(vb_start)
+
+## Von Bertallanfy Growth Model equation.
+vbgm<- length~Linf*(1-exp(-K*(age-t0))) 
+
+## Fit VBGM model with the help of NLS package.
+fit_vbgm <- nls(vbgm, data = herring_clean, start = vb_start)
+
+## Results from model.
+mod_tidy <- tidy(fit_vbgm, conf.int = TRUE)
+
+## Table of VBGM results.
+VBGM_tbl <- mod_tidy |>
+  gt() |>
+  fmt_number(c(estimate, statistic, std.error, conf.low, conf.high),
+             decimals = 2) |>
+  cols_label(
+    term = "Parameter",
+    estimate = "Estimate",
+    std.error = "Std. Error",
+    statistic = "t-value",
+    conf.low = "95% CI (Lower)",
+    conf.high = "95% CI (Upper)"
+  ) |>
+  tab_style(
+    style = cell_text(align = "center"),
+    locations = cells_body(columns = -term)
+  ) 
+```
